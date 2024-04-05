@@ -8,7 +8,7 @@ import interfaces.*
 
 class GestorBiblioteca(
     private val consola: IGestorConsola,
-    private val catalogo: IGestorCatalogo,
+    private val catalogo: IGestorElementos<ElementoBiblioteca>,
     private val usuarios: IGestorUsuarios,
     private val prestamos: IGestorPrestamos
 ) : IGestorBiblioteca {

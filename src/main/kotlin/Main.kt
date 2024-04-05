@@ -8,12 +8,11 @@ fun main() {
     val consola = GestorConsola()
 
     val gestorElementos = GestorElementos<ElementoBiblioteca>()
-    val catalogo = GestorCatalogo(gestorElementos)
     val usuarios = GestorUsuarios()
 
     val gestorPrestamos = GestorPrestamos()
 
-    val biblioteca = GestorBiblioteca(consola, catalogo, usuarios, gestorPrestamos)
+    val biblioteca = GestorBiblioteca(consola, gestorElementos, usuarios, gestorPrestamos)
     val menu = GestorMenu(consola, biblioteca)
 
     // Añadir dos usuarios para pruebas...
@@ -21,14 +20,14 @@ fun main() {
     biblioteca.agregarUsuario("Marcos")
 
     // Añadir algunos elementos al catálogo para pruebas...
-    biblioteca.agregarElemento(Libro(catalogo.generarId(), "El Hobbit", "J.R.R. Tolkien", 1937, "Fantasía"))
-    biblioteca.agregarElemento(Libro(catalogo.generarId(), "1984", "George Orwell", 1949, "Ciencia Ficción"))
-    biblioteca.agregarElemento(Libro(catalogo.generarId(), "Cien años de soledad", "Gabriel García Márquez", 1967, "Realismo Mágico"))
+    biblioteca.agregarElemento(Libro(gestorElementos.generarId(), "El Hobbit", "J.R.R. Tolkien", 1937, "Fantasía"))
+    biblioteca.agregarElemento(Libro(gestorElementos.generarId(), "1984", "George Orwell", 1949, "Ciencia Ficción"))
+    biblioteca.agregarElemento(Libro(gestorElementos.generarId(), "Cien años de soledad", "Gabriel García Márquez", 1967, "Realismo Mágico"))
 
     // El elementos.Ebook no es prestable... debería dar error al intentar registrar el préstamo...
-    biblioteca.agregarElemento(Ebook(catalogo.generarId(), "Kotlin no se presta", 7.0))
+    biblioteca.agregarElemento(Ebook(gestorElementos.generarId(), "Kotlin no se presta", 7.0))
 
-    biblioteca.agregarElemento(Dvd(catalogo.generarId(), "Seis días y siete noches", 127))
+    biblioteca.agregarElemento(Dvd(gestorElementos.generarId(), "Seis días y siete noches", 127))
 
     consola.limpiar()
 
