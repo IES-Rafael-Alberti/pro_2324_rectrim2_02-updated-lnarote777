@@ -1,11 +1,12 @@
 package gestores
 
 import elementos.ElementoBiblioteca
+import interfaces.ICreadorElemento
 import interfaces.IGestorElementos
 import otros.Estado
 import otros.UtilidadesBiblioteca
 
-class GestorElementos<T: ElementoBiblioteca> : IGestorElementos<T> {
+class GestorElementos<T: ElementoBiblioteca> : IGestorElementos<T>{
     override val elementos = mutableListOf<T>()
 
     override fun agregar(elemento: T): Boolean = elementos.add(elemento)

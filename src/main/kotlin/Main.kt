@@ -13,7 +13,7 @@ fun main() {
     val gestorPrestamos = GestorPrestamos()
 
     val biblioteca = GestorBiblioteca(consola, gestorElementos, usuarios, gestorPrestamos)
-    val menu = GestorMenu(consola, biblioteca)
+    val menu = GestorMenu(consola, biblioteca, gestorElementos)
 
     // Añadir dos usuarios para pruebas...
     biblioteca.agregarUsuario("Julia")

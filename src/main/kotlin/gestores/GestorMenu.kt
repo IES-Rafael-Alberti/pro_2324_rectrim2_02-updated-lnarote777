@@ -1,17 +1,24 @@
 package gestores
 
+import creadores.CrearDvd
+import creadores.CrearEbook
+import creadores.CrearLibro
+import creadores.CrearRevista
+import elementos.ElementoBiblioteca
 import otros.Estado
 import interfaces.IGestorBiblioteca
 import interfaces.IGestorConsola
+import interfaces.IGestorElementos
 
 class GestorMenu(
     private val consola: IGestorConsola,
-    private val biblioteca: IGestorBiblioteca
+    private val biblioteca: IGestorBiblioteca,
+    private val gestorElementos: IGestorElementos<ElementoBiblioteca>
 ) {
 
     private fun mostrarMenuPpal(): Int {
         consola.mostrarInfo("MENÚ - Sistema de Gestión de Biblioteca")
-        consola.mostrarInfo(" 1. Agregar libro") // Para ampliar correctamente pedir tipo de elemento
+        consola.mostrarInfo(" 1. Agregar elemento") // Para ampliar correctamente pedir tipo de elemento
         consola.mostrarInfo(" 2. Eliminar elemento")
         consola.mostrarInfo(" 3. Registrar préstamo")
         consola.mostrarInfo(" 4. Devolver elemento")
@@ -38,7 +45,7 @@ class GestorMenu(
             opcion = mostrarMenuPpal()
 
             when (opcion) {
-                1 -> crearLibro()
+                1 -> subMenu()
                 2 -> biblioteca.eliminarElemento(pedirIdElemento())
                 3 -> biblioteca.prestarElemento(pedirIdUsuario(), pedirIdElemento())
                 4 -> biblioteca.devolverElemento(pedirIdUsuario(), pedirIdElemento())
@@ -59,14 +66,6 @@ class GestorMenu(
 
         } while (opcion != 13)
 
-    }
-
-    private fun crearLibro() {
-        val titulo = consola.pedirCadena("\n* Introduzca el título: ")
-        val autor = consola.pedirCadena("\n* Introduzca el autor: ")
-        val anioPublicacion = consola.pedirEntero("\n* Introduzca el año de publicación: ")
-        val tematica = consola.pedirCadena("\n* Introduzca la temática: ")
-        biblioteca.agregarLibro(titulo, autor, anioPublicacion, tematica)
     }
 
     private fun pedirIdElemento() = consola.pedirCadena("\n* Introduzca el id del elemento: ")
@@ -96,6 +95,35 @@ class GestorMenu(
             consola.mostrarInfo("\nUsuarios a los que se ha prestado el libro:")
             info.forEach { usuarioId -> consola.mostrarInfo(biblioteca.buscarUsuario(usuarioId)) }
         }
+    }
+
+    private fun mostrarSubMenu(): Int {
+        consola.mostrarInfo("MENÚ - Agregar Elemento")
+        consola.mostrarInfo("1. Libro")
+        consola.mostrarInfo("2. Revista")
+        consola.mostrarInfo("3. DVD")
+        consola.mostrarInfo("4. Ebook")
+        consola.mostrarInfo("5. VOLVER")
+        return consola.pedirEntero("Elige una opción -> ", 1, 5)
+    }
+
+    private fun subMenu(){
+        var opcion: Int
+        do {
+            opcion = mostrarSubMenu()
+
+            when (opcion){
+                1 -> biblioteca.agregarElemento(CrearLibro(consola, gestorElementos))
+                2 -> biblioteca.agregarElemento(CrearRevista(consola, gestorElementos))
+                3 -> biblioteca.agregarElemento(CrearDvd(consola, gestorElementos))
+                4 -> biblioteca.agregarElemento(CrearEbook(consola, gestorElementos) )
+            }
+
+            if (opcion != 5) {
+                pausa()
+                consola.limpiar()
+            }
+        }while (opcion != 5)
     }
 
 }

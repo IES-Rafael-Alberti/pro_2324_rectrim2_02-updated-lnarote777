@@ -8,24 +8,21 @@ import interfaces.*
 
 class GestorBiblioteca(
     private val consola: IGestorConsola,
-    private val catalogo: IGestorElementos<ElementoBiblioteca>,
+    private val gestorElementos: IGestorElementos<ElementoBiblioteca>,
     private val usuarios: IGestorUsuarios,
     private val prestamos: IGestorPrestamos
 ) : IGestorBiblioteca {
 
     override fun agregarElemento(elemento: ElementoBiblioteca) {
-        if (catalogo.agregar(elemento)) {
+        if (gestorElementos.agregar(elemento)) {
             consola.mostrarInfo("\nElemento ${elemento.id} ha sido agregado.")
         }
     }
 
-    override fun agregarLibro(titulo: String, autor: String, anioPublicacion: Int, tematica: String) {
-        try {
-            val libro = Libro(catalogo.generarId(), titulo, autor, anioPublicacion, tematica)
-            agregarElemento(libro)
-        }
-        catch (e: IllegalArgumentException) {
-            consola.mostrarInfo("\n**Error** ${e.message}.")
+    override fun agregarElemento(creador: ICreadorElemento<ElementoBiblioteca>){
+        val elemento = creador.crear()
+        if (elemento != null){
+            agregarElemento(elemento)
         }
     }
 
@@ -48,7 +45,7 @@ class GestorBiblioteca(
     }
 
     override fun eliminarElemento(id: String) {
-        if (catalogo.eliminar(id)) {
+        if (gestorElementos.eliminar(id)) {
             consola.mostrarInfo("\nElemento $id ha sido eliminado.")
         }
         else {
@@ -58,7 +55,7 @@ class GestorBiblioteca(
 
     override fun prestarElemento(usuarioId: Int, elementoId: String) {
         val usuario = usuarios.buscar(usuarioId)
-        val elemento = catalogo.buscar(elementoId, Estado.DISPONIBLE)
+        val elemento = gestorElementos.buscar(elementoId, Estado.DISPONIBLE)
         if (usuario != null && elemento != null && elemento is IPrestable) {
             usuario.agregarElementoPrestado(elemento)
             elemento.prestar()
@@ -80,7 +77,7 @@ class GestorBiblioteca(
 
     override fun devolverElemento(usuarioId: Int, elementoId: String) {
         val usuario = usuarios.buscar(usuarioId)
-        val elemento = catalogo.buscar(elementoId, Estado.PRESTADO)
+        val elemento = gestorElementos.buscar(elementoId, Estado.PRESTADO)
         if (usuario != null && elemento != null && elemento is IPrestable) {
             usuario.quitarElementoPrestado(elemento)
             elemento.devolver()
@@ -101,7 +98,7 @@ class GestorBiblioteca(
     }
 
     override fun consultarDisponibilidadElemento(id: String) {
-        val elemento = catalogo.buscar(id)
+        val elemento = gestorElementos.buscar(id)
         if (elemento == null) {
             consola.mostrarInfo("\n**Error** Elemento $id no encontrado en el catálogo.")
         }
@@ -111,11 +108,11 @@ class GestorBiblioteca(
     }
 
     override fun elementosCatalogo(estado: Estado): List<ElementoBiblioteca> {
-        return catalogo.obtenerElementos(estado)
+        return gestorElementos.obtenerElementos(estado)
     }
 
     override fun elementosCatalogo(): List<ElementoBiblioteca> {
-        return catalogo.obtenerElementos()
+        return gestorElementos.obtenerElementos()
     }
 
     override fun elementosPrestadosUsuario(usuarioId: Int) : List<ElementoBiblioteca> {

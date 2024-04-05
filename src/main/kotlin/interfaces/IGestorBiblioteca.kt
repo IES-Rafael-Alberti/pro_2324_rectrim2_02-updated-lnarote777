@@ -8,7 +8,7 @@ interface IGestorBiblioteca {
 
     fun agregarElemento(elemento: ElementoBiblioteca)
 
-    fun agregarLibro(titulo: String, autor: String, anioPublicacion: Int, tematica: String)
+    fun agregarElemento(creador: ICreadorElemento<ElementoBiblioteca>)
 
     fun agregarUsuario(usuario: Usuario)
 
