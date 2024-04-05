@@ -6,7 +6,7 @@ import interfaces.ICreadorElemento
 import interfaces.IGestorConsola
 import interfaces.IGestorElementos
 
-class CrearEbook(val consola: IGestorConsola, val gestorElementos: IGestorElementos<ElementoBiblioteca>): ICreadorElemento<ElementoBiblioteca> {
+class CrearEbook(private val consola: IGestorConsola, private val gestorElementos: IGestorElementos<ElementoBiblioteca>): ICreadorElemento<ElementoBiblioteca> {
     override fun crear(): Ebook? {
         val titulo = consola.pedirCadena("\n* Introduzca el título: ")
         val tamanio = consola.pedirCadena("\n* Introduzca el tamaño en pulgadas: ").toDouble()

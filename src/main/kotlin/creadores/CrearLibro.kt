@@ -6,7 +6,7 @@ import interfaces.ICreadorElemento
 import interfaces.IGestorConsola
 import interfaces.IGestorElementos
 
-class CrearLibro(val consola: IGestorConsola, val gestorElementos: IGestorElementos<ElementoBiblioteca>): ICreadorElemento<ElementoBiblioteca> {
+class CrearLibro(private val consola: IGestorConsola, private val gestorElementos: IGestorElementos<ElementoBiblioteca>): ICreadorElemento<ElementoBiblioteca> {
     override fun crear(): Libro? {
         val titulo = consola.pedirCadena("\n* Introduzca el título: ")
         val autor = consola.pedirCadena("\n* Introduzca el autor: ")
