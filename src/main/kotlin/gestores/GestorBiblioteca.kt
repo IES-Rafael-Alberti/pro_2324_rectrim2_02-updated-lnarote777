@@ -23,6 +23,8 @@ class GestorBiblioteca(
         val elemento = creador.crear()
         if (elemento != null){
             agregarElemento(elemento)
+        }else{
+            consola.mostrarInfo("***No se pudo agregar el elemento**")
         }
     }
 
